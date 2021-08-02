@@ -127,7 +127,7 @@ function died(mongolian)
 				LocalPlayer.CameraMode = Enum.CameraMode.Classic
 				StarterGui:SetCore("SendNotification",{
 					Title="RLX Silent Aim",
-					Text = "The one you have locked on has been knocked, the aimlock was deactivated."
+					Text = "The one you have locked on has been knocked, unlocked from them."
 				})
 			end
 			hong_kong:Disconnect()
@@ -139,7 +139,7 @@ function died(mongolian)
 			LocalPlayer.CameraMode = Enum.CameraMode.Classic
 			StarterGui:SetCore("SendNotification",{
 				Title="RLX Silent Aim",
-				Text = "The one you locked on died, the aimlock was deactivated."
+				Text = "The one you locked on died, unlocked frm them."
 			})
 		end
 		china:Disconnect()
@@ -164,7 +164,7 @@ Players.PlayerRemoving:Connect(function(asshole)
         aimlock["victim"] = nil
         StarterGui:SetCore("SendNotification",{
             Title="RLX Silent Aim",
-            Text = "THE RETARD YOU LOCKED ON LEFT HAHAHA XD\nUNLOCKED AND DEACTIVATED THE AIMLOCK"
+            Text = "THE RETARD YOU LOCKED ON LEFT HAHAHA XD\nUNLOCKED"
         })
     end
 end)
