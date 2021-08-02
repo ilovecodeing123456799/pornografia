@@ -100,7 +100,6 @@ end
 function suicide(mongolian)
 	local gay = mongolian.Character
     gay.Humanoid.Died:Connect(function()
-		aimlock.activated = false
         LocalPlayer.CameraMode = Enum.CameraMode.Classic
         StarterGui:SetCore("SendNotification",{
             Title="RLX Silent Aim",
@@ -124,7 +123,6 @@ function died(mongolian)
 	if gay:FindFirstChild("BodyEffects") and gay.BodyEffects:FindFirstChild("K.O") then
 		hong_kong = gay.BodyEffects["K.O"].Changed:Connect(function()
 			if gay.BodyEffects["K.O"].Value == true and aimlock["victim"] == mongolian then
-				aimlock.activated = false
 				aimlock.victim = nil
 				LocalPlayer.CameraMode = Enum.CameraMode.Classic
 				StarterGui:SetCore("SendNotification",{
@@ -137,7 +135,6 @@ function died(mongolian)
 	end
 	china = gay.Humanoid.Died:Connect(function()
 		if aimlock["victim"] == mongolian then
-			aimlock.activated = false
 			aimlock.victim = nil
 			LocalPlayer.CameraMode = Enum.CameraMode.Classic
 			StarterGui:SetCore("SendNotification",{
@@ -165,7 +162,6 @@ end)
 Players.PlayerRemoving:Connect(function(asshole)
     if asshole == aimlock["victim"] then
         aimlock["victim"] = nil
-        aimlock.activated = false
         StarterGui:SetCore("SendNotification",{
             Title="RLX Silent Aim",
             Text = "THE RETARD YOU LOCKED ON LEFT HAHAHA XD\nUNLOCKED AND DEACTIVATED THE AIMLOCK"
