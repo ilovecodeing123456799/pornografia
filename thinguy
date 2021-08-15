@@ -1,3 +1,14 @@
+-- idk who made it whatever credits etc etc
+
+getgenv().SilentAim = {
+    Enabled = false, 
+    FOVRep = false, 
+    TeamCheck = false
+    VisibleCheck = false
+    FOV = 50, 
+    HitChance = 100
+ }
+ 
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
 
