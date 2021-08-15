@@ -1,0 +1,110 @@
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+local accomidationfactor = 0.165
+
+-- // Vars
+local players = game.GetService(game, "Players")
+local guiservice = game.GetService(game, "GuiService")
+local runservice = game.GetService(game, "RunService")
+local renderstepped = runservice.RenderStepped
+local localPlayer = players.LocalPlayer
+local currentCamera = game.GetService(game, "Workspace").CurrentCamera
+local mouse = localPlayer.GetMouse(localPlayer)
+
+-- // MT Vars + Funcs
+local mt = getrawmetatable(game)
+local backupnamecall = mt.__namecall
+local backupnewindex = mt.__newindex
+local backupindex = mt.__index
+local setreadonly = setreadonly or make_writeable
+local getnamecallmethod = getnamecallmethod or get_namecall_method
+local newcclosure = newcclosure or function(f)
+return f
+end
+setreadonly(mt, false)
+
+local circle = Drawing.new("Circle")
+function updateCircle()
+if circle.__OBJECT_EXISTS then
+   circle.Transparency = 1
+   circle.Visible = SilentAim["FOVRep"]
+   circle.Thickness = 2
+   circle.Color = Color3.fromRGB(255, 255, 255)
+   circle.NumSides = 12
+   circle.Radius = (SilentAim["FOV"] * 6) / 2
+   circle.Filled = false
+   circle.Position = Vector2.new(mouse.X, mouse.Y + (guiservice.GetGuiInset(guiservice).Y))
+end
+end
+renderstepped.Connect(renderstepped, updateCircle)
+
+local negaa = lib.flags.saimpart or "HumanoidRootPart"
+-- // Silent Aim Funcs
+function isPartVisible(part)
+local camera = game.GetService(game, "Workspace").CurrentCamera
+local character = game.GetService(game, "Players").LocalPlayer.Character.GetDescendants(game.GetService(game, "Players").LocalPlayer.Character)
+local castPoints = {
+   part.Position
+}
+return camera.GetPartsObscuringTarget(camera, castPoints, character)
+end
+setreadonly(math, false);
+math.chance = function(percentage)
+local percentage = math.floor(percentage);
+local chance = math.floor(Random.new().NextNumber(Random.new(), 0, 1) * 100) / 100;
+return chance <= percentage / 100
+end;
+setreadonly(math, true);
+local getClosestPlayerToCursor = function()
+local closestPlayer = nil
+local chance = math.chance(SilentAim["HitChance"])
+local shortestDistance = math.huge
+for i, v in pairs(players.GetPlayers(players)) do
+if v ~= localPlayer and v.Character and v.Character.FindFirstChild(v.Character, "Humanoid") and v.Character.Humanoid.Health ~= 0 and v.Character.PrimaryPart ~= nil and v.Character.FindFirstChild(v.Character, "Head") then
+   if SilentAim["VisibleCheck"] and not isPartVisible(v.Character.PrimaryPart) then
+	  return (chance and closestPlayer or localPlayer)
+   end
+   if SilentAim["TeamCheck"] then
+	  if v.Team ~= localPlayer.Team then
+		 local pos = currentCamera.WorldToViewportPoint(currentCamera, v.Character.PrimaryPart.Position)
+		 local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+		 if magnitude < (SilentAim["FOV"] * 6 - 8) then
+			if magnitude < shortestDistance then
+			   closestPlayer = v
+			   shortestDistance = magnitude
+			end
+		 end
+	  end
+   else
+	  local pos = currentCamera.WorldToViewportPoint(currentCamera, v.Character.PrimaryPart.Position)
+	  local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(mouse.X, mouse.Y)).magnitude
+	  if magnitude < (SilentAim["FOV"] * 6 - 8) then
+		 if magnitude < shortestDistance then
+			closestPlayer = v
+			shortestDistance = magnitude
+		 end
+	  end
+   end
+end
+end
+return (chance and closestPlayer or localPlayer)
+end
+mt.__namecall = newcclosure(function(...)
+local method = getnamecallmethod()
+local args = {
+...
+}
+
+if tostring(method) == "FireServer" and tostring(args[1]) == "MainEvent" and tostring(args[2]) == 'UpdateMousePos' and SilentAim["Enabled"] then
+if getClosestPlayerToCursor().Character ~= nil then
+if getClosestPlayerToCursor().Character.BodyEffects["K.O"].Value == false or Character:FindFirstChild("GRABBING_CONSTRAINT") ~= nil then
+args[3] = getClosestPlayerToCursor().Character[negaa].Position+(getClosestPlayerToCursor().Character[negaa].Velocity*accomidationfactor) -- +(Character.Head.Velocity*accomidationfactor)
+end
+end
+
+return backupnamecall(unpack(args))
+end
+return backupnamecall(...)
+end)
+setreadonly(mt, false)
