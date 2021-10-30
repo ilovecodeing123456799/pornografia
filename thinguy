@@ -1,10 +1,10 @@
 -- idk who made it whatever credits etc etc
 
 getgenv().SilentAim = {
-    Enabled = false, 
-    FOVRep = false, 
+    Enabled = true, 
+    FOVRep = true, 
     TeamCheck = false
-    VisibleCheck = false
+    VisibleCheck = true
     FOV = 50, 
     HitChance = 100
  }
